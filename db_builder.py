@@ -1,27 +1,36 @@
 from pymongo import MongoClient
-import csv       #facilitates CSV I/O
+import csv  #facilitates CSV I/O
 
+#server = MongoClient("localhost")
 server = MongoClient("lisa.stuy.edu")
 ourDB = server['bagels']
 
-#==========================================================
-#INSERT YOUR POPULATE CODE IN THIS ZONE
-#...perhaps by beginning with these examples...
+peeps = open("peeps.csv")
+courses = open("courses.csv")
+
+people = csv.DictReader(peeps)
+courseList = csv.DictReader(courses)
+
+for person in people:
+    oneStudent = {} #the document
+    oneStudent['name'] = person['name']
+    oneStudent['age'] = person['age']
+    oneStudent['id'] = person['id']
+
+    #create list of courses & grades for this student
+    grades = []
+    for course in courseList:
+        if course['id'] == oneStudent['id']:
+            grades.append( { 'code' : course['code'], 'mark' : course['mark'] } )
+    oneStudent['courses'] = grades
+
+    #reset "cursor" of file to beginning
+    #allows iteration through courseList again
+    courses.seek(0)
+    
+    #put doc into students collection
+    ourDB.students.insert_one(oneStudent) 
 
 
 
-oneStudent = {}
 
-fObj1 = open("peeps.csv")
-d = csv.DictReader(fObj1)
-
-for row in d:
-    oneStudent['name'] = row['name']
-    oneStudent['age'] = row['age']
-    oneStudent['id'] = row['id']
-    print oneStudent
-    oneStudent = {}
-
-
-fObj2 = open("courses.csv")
-e = csv.DictReader(fObj2)
