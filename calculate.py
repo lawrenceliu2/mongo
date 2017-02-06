@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-import csv  #facilitates CSV I/O
 
 server = MongoClient("lisa.stuy.edu")
 ourDB = server['bagels']
