@@ -16,4 +16,7 @@ def printAllAvgs():
     for doc in docs:
         print "name: ", doc['name'], "\tid: ", doc['id'], "\taverage: ", getAvg( doc['id'] )
 
-printAllAvgs()
+def updateStudentAge(studentID, newAge):
+    students = ourDB.students.find()
+    ourDB.students.update_one({"id" : studentID}, { "$set": { "age" : newAge }})
+    return true
